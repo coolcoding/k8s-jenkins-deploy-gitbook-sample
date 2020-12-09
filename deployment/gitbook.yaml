@@ -24,8 +24,16 @@ spec:
           limits:
             cpu: 0.5
             memory: "500Mi"
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          name: config
+          subPath: nginx.conf
       imagePullSecrets:
         - name: dockerhub
+      volumes:
+      - name: config
+        configMap:
+          name: configmap-nginx
 ---
 apiVersion: v1     
 kind: Service    
