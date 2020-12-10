@@ -23,7 +23,7 @@ data:
     
         server {
             listen 80;
-    
+            underscores_in_headers on;
             access_log /var/log/nginx/access.log compression;
     
             root /var/www;
@@ -34,17 +34,11 @@ data:
                 try_files $uri $uri/ /index.html;
             }
     
-            location ~* \.(?:jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc)$ {
-              expires 1M;
-              access_log off;
-              add_header Cache-Control "public";
-            }
-    
-            location ~* \.(?:css|js)$ {
-                try_files $uri =404;
-                expires 1y;
-                access_log off;
-                add_header Cache-Control "public";
+            location /healthz {
+                if ($http_x_custom_header = "healthz"){ 
+                    return 200 "healthz";
+                }
+                return 403; 
             }
     
             location ~ ^.+\..+$ {

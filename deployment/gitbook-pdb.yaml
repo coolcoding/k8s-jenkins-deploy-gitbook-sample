@@ -1,0 +1,10 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  namespace: gitbook
+  name: tcpdump-book-pdb
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: tcpdump-book
