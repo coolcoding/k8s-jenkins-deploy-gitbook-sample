@@ -1,0 +1,26 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "book.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "book.name" . }}
+    chart: {{ template "book.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      name: {{ template "book.fullname" . }}
+      app: {{ template "book.name" . }}
+      release: {{ .Release.Name }}
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: {{ template "client.name" . }}
+            release: {{ .Release.Name }}
+    - ports:
+      - port: {{ .Values.service.port }}
+{{- end }}
